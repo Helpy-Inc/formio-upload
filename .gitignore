@@ -2,3 +2,4 @@ node_modules
 providers/uploads/*
 .idea
 claudia.json
+.env
