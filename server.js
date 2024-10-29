@@ -26,9 +26,9 @@ app.addProvider = function(name, Provider) {
   // Download the file.
   app.get(`/${name}/:fileId`,
     (req, res, next) => {
-      if (!req.query.token) {
-        return res.status(401).send('Unauthorized');
-      }
+      // if (!req.query.token) {
+      //   return res.status(401).send('Unauthorized');
+      // }
       req.provider = Provider;
       next();
     },
@@ -48,6 +48,7 @@ app.addProvider = function(name, Provider) {
     middleware.init('downloadToken'),
     middleware.tempToken,
     (req, res) => res.json({url: req.body.url})
+    
   );
 
   // Upload a file.
@@ -72,6 +73,7 @@ app.addProvider = function(name, Provider) {
     },
     middleware.cleanup
   );
+
 };
 
 // Add the default providers.
