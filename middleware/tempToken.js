@@ -5,6 +5,8 @@ module.exports = function tempToken(req, res, next) {
     return next('No file url provided.');
   }
 
+  return next();
+
   // Get the project and form.
   const url = _.get(req.body, 'data.baseUrl');
   const project = _.get(req.body, 'data.project');
