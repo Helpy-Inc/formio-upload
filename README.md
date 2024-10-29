@@ -4,6 +4,10 @@ This library provides an Upload Server/Proxy for use with the Form.io File Compo
 This allows for **Private file upload and downloads** by sending Authentication requests to the Form.io API Server
 to determine if a user has permissions to upload or download based on their access to either Submit the form, or fetch the Submission JSON respectively.
 
+## Changes from original
+This fork of the formio/formio-upload Server/Proxy remove the authentication logic to make it work with the latest versions of the open source version of formio and adds a S3 provider.
+
+
 ## Getting Started
 This library can be ran within 3 different environments.
 
