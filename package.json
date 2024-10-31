@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index",
-    "deploy": "claudia create --name formio-upload --handler lambda.handler --config claudia.json --deploy-proxy-api --region us-west-2",
+    "deploy": "claudia create --name formio-upload --handler lambda.handler --config claudia.json --deploy-proxy-api --region us-east-1 --profile claudia --runtime nodejs16.x",
     "update": "VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]' | sed 's/[\\.]/-/g');claudia update --config claudia.json --version \"v${VERSION}\"",
     "build": "VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && docker build --squash --build-arg CACHE_DATE=$(date +%s) -t formio/formio-upload:$VERSION . && docker build --squash --build-arg CACHE_DATE=$(date +%s) -t formio/formio-upload:latest .",
     "publish": "VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && docker push formio/formio-upload:$VERSION && docker push formio/formio-upload:latest;"
