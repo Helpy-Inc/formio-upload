@@ -4,7 +4,7 @@ const bucket = process.env.S3_BUCKET || '';
 const region = 'us-east-1'
 const idKey = process.env.S3_IDKEY || '';
 const secretKey = process.env.S3_SECRETKEY || '';
-const { GetObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
+const { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 const {
   getSignedUrl,
 } = require("@aws-sdk/s3-request-presigner");
@@ -56,6 +56,12 @@ class S3Provider extends Provider {
     const command = new GetObjectCommand({ Bucket: bucket, Key: path });
     
     getSignedUrl(s3client, command, { expiresIn: 3600 }).then(signedUrl => res.redirect(signedUrl));
+  }
+
+  static delete(path, req, res) {
+    const command = new DeleteObjectCommand({ Bucket: bucket, Key: path });
+    
+    s3client.send(command).then(()=>res.send('Done'));
   }
 }
 

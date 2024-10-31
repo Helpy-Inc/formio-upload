@@ -74,6 +74,15 @@ app.addProvider = function(name, Provider) {
     middleware.cleanup
   );
 
+  // Delete a file.
+  app.delete(`/${name}/:fileId`,
+    (req, res, next) => {
+      req.provider = Provider;
+      next();
+    },
+    (req, res) => Provider.delete(req.params.fileId, req, res)
+  );
+
 };
 
 // Add the default providers.
