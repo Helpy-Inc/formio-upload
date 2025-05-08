@@ -1,9 +1,7 @@
 const Provider = require('./provider');
 const uploadDir = process.env.S3_UPLOAD_DIR || `uploads`;
 const bucket = process.env.S3_BUCKET || '';
-const region = 'us-east-1'
-const idKey = process.env.S3_IDKEY || '';
-const secretKey = process.env.S3_SECRETKEY || '';
+const region = process.env.S3_REGION || ''
 const { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 const {
   getSignedUrl,
@@ -14,11 +12,7 @@ const { formatUrl } = require("@aws-sdk/util-format-url");
 const { Request } = require('node-fetch');
 
 const config = {
-  region: region,
-  credentials: {
-    accessKeyId: idKey,
-    secretAccessKey: secretKey,
-  },
+  region: region
 }
 
 const s3client = new S3Client(config);
