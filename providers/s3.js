@@ -10,7 +10,7 @@ const fs = require('fs-extra');
 const { v4: uuid } = require('uuid');
 const { formatUrl } = require("@aws-sdk/util-format-url");
 const { Request } = require('node-fetch');
-import { jwtDecode } from "jwt-decode";
+const { jwtDecode } = require("jwt-decode");
 
 const config = {
   region: region
