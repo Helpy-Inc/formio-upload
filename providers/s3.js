@@ -1,7 +1,7 @@
 const Provider = require('./provider');
 const uploadDir = process.env.S3_UPLOAD_DIR || `uploads`;
 const bucket = process.env.S3_BUCKET || '';
-const region = process.env.S3_REGION || ''
+const region = process.env.S3_REGION || '';
 const { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 const {
   getSignedUrl,
@@ -10,6 +10,7 @@ const fs = require('fs-extra');
 const { v4: uuid } = require('uuid');
 const { formatUrl } = require("@aws-sdk/util-format-url");
 const { Request } = require('node-fetch');
+import { jwtDecode } from "jwt-decode";
 
 const config = {
   region: region
@@ -37,9 +38,8 @@ class S3Provider extends Provider {
       // here should go the url to this server to download the file
       file.url = `/${encodedKey}`;
 
-      file.bucket = bucket;
-
       const promise = new Promise((resolve) => resolve(file))
+      
       return promise
     } )
     
@@ -47,12 +47,48 @@ class S3Provider extends Provider {
   }
 
   static download(path, req, res) {
+    console.log('headers', req.headers['hfhauthentication']);
+
+    const idToken = req.headers['hfhauthentication'];
+
+    const decoded = jwtDecode(idToken);
+
+    const { sub } = decoded;
+
+    const userGroups = decoded['cognito:groups'] || [];
+
+    const fileOwner = path.split('/')[1];
+
+    const habitatId = path.split('/')[2];
+    
+    if(!(sub === fileOwner || userGroups.includes('Admins') || userGroups.includes('Affiliates'))) {
+      throw new Error('Unauthorized');
+    }
+
     const command = new GetObjectCommand({ Bucket: bucket, Key: path });
     
     getSignedUrl(s3client, command, { expiresIn: 3600 }).then(signedUrl => res.redirect(signedUrl));
   }
 
   static delete(path, req, res) {
+    console.log('headers', req.headers['hfhauthentication']);
+
+    const idToken = req.headers['hfhauthentication'];
+
+    const decoded = jwtDecode(idToken);
+
+    const { sub } = decoded;
+
+    const userGroups = decoded['cognito:groups'] || [];
+
+    const fileOwner = path.split('/')[1];
+
+    const habitatId = path.split('/')[2];
+    
+    if(!(sub === fileOwner || userGroups.includes('Admins') || userGroups.includes('Affiliates'))) {
+      throw new Error('Unauthorized');
+    }
+
     const command = new DeleteObjectCommand({ Bucket: bucket, Key: path });
     
     s3client.send(command).then(()=>res.send('Done'));
