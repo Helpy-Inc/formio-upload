@@ -85,13 +85,15 @@ class S3Provider extends Provider {
 
     const habitatId = path.split('/')[2];
     
-    if(!(sub === fileOwner || userGroups.includes('Admins') || userGroups.includes('Affiliates'))) {
+    if(!(sub === fileOwner)) {
       throw new Error('Unauthorized');
     }
 
     const command = new DeleteObjectCommand({ Bucket: bucket, Key: path });
     
     s3client.send(command).then(()=>res.send('Done'));
+
+    res.send('Done');
   }
 }
 
