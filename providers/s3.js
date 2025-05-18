@@ -61,7 +61,7 @@ class S3Provider extends Provider {
 
     const habitatId = path.split('/')[2];
     
-    if(!(sub === fileOwner || userGroups.includes('Admins') || userGroups.includes('Affiliates'))) {
+    if(!(fileOwner === 'public' || sub === fileOwner || userGroups.includes('Admins') || userGroups.includes('Affiliates'))) {
       throw new Error('Unauthorized');
     }
 
